@@ -1,0 +1,8 @@
+# File: requirements.txt
+dash==2.14.2
+pandas==2.1.4
+yfinance==0.2.33
+plotly==5.18.0
+numpy==1.26.2
+python-dateutil==2.8.2
+requests==2.31.0
