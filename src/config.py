@@ -4,23 +4,23 @@ Configuration settings for the stock dashboard application.
 """
 from pathlib import Path
 
-# Directory Settings
+# directory settings
 BASE_DIR = Path(__file__).parent
 DATA_DIR = BASE_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
 
-# Default settings
+# default settings
 DEFAULT_TICKER = "AAPL"
 DEFAULT_TIMEFRAME = "1y"
 DEFAULT_INTERVAL = "1d"
 
-# Technical Analysis Parameters
-MA_PERIODS = [20, 50, 200]
-RSI_PERIOD = 14
-BBANDS_PERIOD = 20
+# technical analysis parameters
+MA_PERIODS = [20, 50, 200] # sma dates
+RSI_PERIOD = 14 # rsi length of time
+BBANDS_PERIOD = 20 # bollinger bands
 BBANDS_STD = 2
 
-# UI Settings
+# UI settings
 THEME = "plotly_dark"
 COLORS = {
     'background': '#0f1729',

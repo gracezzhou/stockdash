@@ -1,7 +1,5 @@
 # File: stock_dashboard/dashboard.py
-"""
-Main dashboard application using Dash framework.
-"""
+
 import dash
 from dash import dcc, html
 from dash.dependencies import Input, Output, State
@@ -48,7 +46,6 @@ class StockDashboard:
                     html.Button('Update', id='update-button', n_clicks=0)
                 ]),
             ], style={'padding': '20px', 'background-color': COLORS['background']}),
-            
             html.Div([
                 dcc.Loading(
                     id="loading-1",
@@ -75,12 +72,12 @@ class StockDashboard:
             try:
                 df = self.data_fetcher.get_stock_data(ticker, timeframe)
                 
-                # Use TechnicalAnalyzer for all calculations
+                # use TechnicalAnalyzer for all calculations
                 df = self.tech_analyzer.add_moving_averages(df)
                 df = self.tech_analyzer.add_bollinger_bands(df)
                 df = self.tech_analyzer.add_rsi(df)
                 
-                # Create price chart
+                # create price chart
                 price_fig = go.Figure()
                 price_fig.add_trace(go.Candlestick(
                     x=df.index,
@@ -91,7 +88,7 @@ class StockDashboard:
                     name='Price'
                 ))
                 
-                # Add SMAs
+                # add SMAs
                 sma_periods = [20, 50, 200]
                 for period in sma_periods:
                     price_fig.add_trace(go.Scatter(
@@ -107,7 +104,7 @@ class StockDashboard:
                     height=600
                 )
                 
-                # Create technical indicators chart
+                # create technical indicators chart
                 tech_fig = make_subplots(rows=2, cols=1, shared_xaxes=True)
                 tech_fig.add_trace(
                     go.Scatter(x=df.index, y=df['RSI'], name='RSI'),
@@ -133,7 +130,7 @@ class StockDashboard:
                     height=600
                 )
                 
-                # Create volume chart
+                # create volume chart
                 volume_fig = go.Figure()
                 volume_fig.add_trace(go.Bar(
                     x=df.index,

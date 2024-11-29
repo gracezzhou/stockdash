@@ -13,17 +13,7 @@ class StockDataFetcher:
         self.cache = {}
         
     def get_stock_data(self, ticker, timeframe=DEFAULT_TIMEFRAME, interval=DEFAULT_INTERVAL):
-        """
-        Fetch stock data using the modern yfinance API.
-        
-        Args:
-            ticker (str): Stock ticker symbol (e.g., 'AAPL')
-            timeframe (str): Time period to fetch (e.g., '1y', '6mo')
-            interval (str): Data interval (e.g., '1d', '1h')
-            
-        Returns:
-            pd.DataFrame: Processed stock data
-        """
+        # fetch stock data. args: ticker (i.e. symbol), timeframe (time period to fetch), interval (data interval); returns processed stock data in a dataframe
         cache_key = f"{ticker}_{timeframe}_{interval}"
         
         if cache_key in self.cache:
@@ -34,7 +24,7 @@ class StockDataFetcher:
             logger.info(f"Fetching data for {ticker}")
             stock = yf.Ticker(ticker)
             
-            # Use the new API to fetch history
+            # fetch history with yfinance
             df = stock.history(period=timeframe, interval=interval, auto_adjust=True)
             
             if not df.empty:
@@ -46,18 +36,18 @@ class StockDataFetcher:
                 raise ValueError(f"No data available for {ticker}")
                 
         except Exception as e:
-            logger.error(f"Error fetching data for {ticker}: {str(e)}")
+            logger.error(f"Oops! Error fetching data for {ticker}: {str(e)}")
             raise
     
     def _process_data(self, df):
-        """Process raw stock data with technical indicators."""
+        # take technical indicators of raw data
         df = df.copy()
         
-        # Calculate returns using pandas methods
+        # calculate returns
         df['Daily_Return'] = df['Close'].pct_change()
         df['Log_Return'] = np.log(df['Close'] / df['Close'].shift(1))
         
-        # Add common technical indicators (now using pandas calculations)
+        # add SMAs and RSIs
         df['SMA_20'] = df['Close'].rolling(window=20).mean()
         df['SMA_50'] = df['Close'].rolling(window=50).mean()
         df['RSI'] = self._calculate_rsi(df['Close'])
@@ -65,7 +55,6 @@ class StockDataFetcher:
         return df
     
     def _calculate_rsi(self, prices, periods=14):
-        """Calculate RSI using pandas operations."""
         delta = prices.diff()
         
         gain = (delta.where(delta > 0, 0)).rolling(window=periods).mean()
@@ -77,12 +66,10 @@ class StockDataFetcher:
         return rsi
     
     def get_company_info(self, ticker):
-        """Fetch company info using the modern yfinance API."""
         try:
             stock = yf.Ticker(ticker)
             info = stock.info
             
-            # Use the new fast_info attribute for quick access to common metrics
             fast_info = stock.fast_info
             
             return {
@@ -94,8 +81,8 @@ class StockDataFetcher:
                 'dividend_yield': fast_info.get('dividend_yield', 'N/A')
             }
             
-        except Exception as e:
-            logger.error(f"Error fetching company info for {ticker}: {str(e)}")
+        except Exception as e: 
+            logger.error(f"Oops! Error fetching company info for {ticker}: {str(e)}")
             return dict.fromkeys(['name', 'sector', 'industry', 'market_cap', 
                                 'pe_ratio', 'dividend_yield'], 'N/A')
 

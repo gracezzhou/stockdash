@@ -1,0 +1,1 @@
+Basic stock dashboard using Dash and Plotly. Collects real-time stock data for any given ticker and formats it in a candlestick chart. Technical indicators include SMAs (20, 50, and 200-day), bollinger bands, relative strength index. Also includes trading volume analysis and allows for flexible timeframe selection.
